@@ -4,11 +4,12 @@ var path = require('path');
 var server = require('http').Server(app);
 const axios = require('axios');
 const client = require('socket.io')(server);
+const PORT = process.env.PORT || 3000
 
 // const client = require('socket.io').listen(3000).sockets;
 const dateformat = require('dateformat');
 
-server.listen(80);
+server.listen(PORT, () => console.log(`Listening on ${ PORT }`));
 
 app.configure('development', function(){
      app.use(express.errorHandler());

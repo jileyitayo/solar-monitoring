@@ -4,7 +4,8 @@
   "description": "Solar Panel's view of Voltage, Current",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js"
+    "start": "node app.js",
+    "test": "node test.js"
   },
   "dependencies": {
     "axios": "^0.16.2",
