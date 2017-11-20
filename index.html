@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- <link rel="icon" href="../../../../favicon.ico"> -->
+
+    <title>Solar Panel Monitoring</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="public/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="public/css/custom.css" rel="stylesheet">
+    <style type="text/css">
+        .text-size{
+             font-size: 60px;
+        }
+        .card-height{
+            padding-top: 50px;
+            height: 150px;
+        }
+    </style>
+  </head>
+
+  <body>
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+      <a class="navbar-brand" href="#">Solar Panel Monitoring</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+        <!-- <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Link</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link disabled" href="#">Disabled</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="http://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</a>
+            <div class="dropdown-menu" aria-labelledby="dropdown01">
+              <a class="dropdown-item" href="#">Action</a>
+              <a class="dropdown-item" href="#">Another action</a>
+              <a class="dropdown-item" href="#">Something else here</a>
+            </div>
+          </li>
+        </ul>
+        <form class="form-inline my-2 my-lg-0">
+          <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form> -->
+      </div>
+    </nav>
+
+    <div role="main" class="container" style="padding-top: 10px;">
+
+      <div class="starter-template">
+
+        <div class="row" style="margin-top: 5%">
+            <div class="col-md-6">
+                <div class="card text-white bg-dark mb-3">
+                  <div class="card-header">Voltage (v)</div>
+                  <div class="card-body card-height text-center">
+                    <div class="card-title text-size"><div id="voltage">0v</div></div>
+                  </div>
+                </div>
+            </div>
+             <div class="col-md-6">
+                <div class="card text-white bg-dark mb-3">
+                  <div class="card-header">Current (A)</div>
+                  <div class="card-body card-height text-center">
+                    <h1 class="card-title text-size" id="current"><div id="current">0.00A</div></h1>
+                  </div>
+                </div>
+            </div>
+             <div class="col-md-6">
+                <div class="card text-white bg-dark mb-3">
+                  <div class="card-header">Temperature (&#176;C)</div>
+                  <div class="card-body card-height text-center">
+                    <h4 class="card-title text-size"><div id="temperture">0&#176;C</div></h4>
+                  </div>
+                </div>
+            </div>
+             <div class="col-md-6">
+                <div class="card text-white bg-dark mb-3">
+                  <div class="card-header">Light Intensity (cd)</div>
+                  <div class="card-body card-height text-center">
+                    <h4 class="card-title text-size"><div id="lightintensity">0cd</div></h4>
+                  </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+          <!-- <div class="col-md-12 text-center">
+            Time: &nbsp;<b id="dateval"></b>
+          </div> -->
+        </div>
+        <div class="row">
+          <div class="col-md-12 text-center">
+            Last Updated as at&nbsp;<b id="dateupdate"></b>
+          </div>
+        </div>
+      </div>
+    </div><!-- /.container -->
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="public/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="socket.io.js"></script>
+    <script type="text/javascript">
+        (function(){
+            // Get all the Elements
+            var voltage = $('#voltage');
+            var current = $('#current');
+            var temperture = $('#temperture');
+            var lightintensity = $('#lightintensity');
+            var dateupdate = $('#dateupdate');
+
+            function getPM(d){
+              var h =  d.getHours(), m = d.getMinutes();
+              var _time = (h > 12) ? (h-12 + ':' + m +' PM') : (h + ':' + m +' AM');
+              return _time;
+            }
+
+             //connect to socket.io
+            var socket = io.connect('http://solarmonitoring.zichelectric.co');
+
+            // var socket = io.connect('http://127.0.0.1:3000');
+
+            if(socket !== undefined){
+              socket.emit('ready');
+              //Get status from server
+              socket.on('output', function(data){
+                // console.log(data);
+                voltage.html(data.field1+'v');
+                current.html(data.field2+'A');
+                temperture.html(data.field3+'&#176;C');
+                lightintensity.html(data.field4+'cd');
+
+                var d = new Date(data.created_at);
+                dateupdate.html(d.toDateString()+ ' ' + getPM(d));
+              });
+
+              socket.on('date', function(data){
+                // $('#dateval').html(data.date);
+              });
+            }
+
+        })();
+    </script>
+  </body>
+</html>

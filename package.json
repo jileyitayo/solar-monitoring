@@ -1,0 +1,20 @@
+{
+  "name": "solar",
+  "version": "1.0.0",
+  "description": "Solar Panel's view of Voltage, Current",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "axios": "^0.16.2",
+    "body-parser": "*",
+    "dateformat": "^3.0.2",
+    "express": "*",
+    "mongodb": "^2.2.33",
+    "socket.io": "*",
+    "underscore": "*"
+  },
+  "author": "JIL",
+  "license": "ISC"
+}
