@@ -20,6 +20,7 @@ app.get('/', function (req, res) {
 //connect to sockey.io
 client.on('connection', function(socket){
      console.log('Connected Successfully ');
+     socket.on('disconnect', () => console.log('Client disconnected'));
     // Send the current positions to the connected client when client is ready
     socket.on('ready', function() {
         fetchdata(function(data){
