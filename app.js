@@ -11,10 +11,6 @@ const dateformat = require('dateformat');
 
 server.listen(PORT, () => console.log(`Listening on ${ PORT }`));
 
-app.configure('development', function(){
-     app.use(express.errorHandler());
-});
-
 app.use(express.static(path.join(__dirname, '/')));
 
 app.get('/', function (req, res) {
